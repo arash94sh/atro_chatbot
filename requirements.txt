@@ -93,7 +93,7 @@ pandas==2.2.3
 pillow==11.1.0
 posthog==3.18.1
 propcache==0.3.0
-protobuf==5.29.3
+protobuf>=3.20
 pyarrow==17.0.0
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
