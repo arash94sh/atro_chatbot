@@ -1,4 +1,6 @@
-
+import sys
+import pysqlite3
+sys.modules["sqlite3"] = pysqlite3
 import bs4
 import streamlit as st
 import requests
@@ -20,6 +22,8 @@ from langchain_core.prompts import PromptTemplate, HumanMessagePromptTemplate
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_chroma import Chroma
 import os
+
+
 
 
 if not os.environ.get("MISTRAL_API_KEY"):
