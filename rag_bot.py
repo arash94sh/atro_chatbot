@@ -44,7 +44,7 @@ vector_store = Chroma(
 
 
 #rpompt crafting
-prompt = ChatPromptTemplate(input_variables=['context', 'question'], input_types={}, partial_variables={}, metadata={'lc_hub_owner': 'rlm', 'lc_hub_repo': 'rag-prompt', 'lc_hub_commit_hash': '50442af133e61576e74536c6556cefe1fac147cad032f4377b60c436e6cdcb6e'}, messages=[HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['context', 'question'], input_types={}, partial_variables={}, template="you are an assistant that answers the users question regarding the services a company provide based on the content of this website, this is the persian website and the users are persians so you must speak in farsi.\nQuestion: {question} \nContext: {context} \nAnswer:"), additional_kwargs={})])
+prompt = ChatPromptTemplate(input_variables=['context', 'question'], input_types={}, partial_variables={}, metadata={'lc_hub_owner': 'rlm', 'lc_hub_repo': 'rag-prompt', 'lc_hub_commit_hash': '50442af133e61576e74536c6556cefe1fac147cad032f4377b60c436e6cdcb6e'}, messages=[HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['context', 'question'], input_types={}, partial_variables={}, template="you are an assistant that answers the users question regarding the services a company provide based on the content of this website, this is the persian website and the users are persians so you must speak in farsi.when there is no context find reqarding the question say that  you don't knowledge regarding the question.\nQuestion: {question} \nContext: {context} \nAnswer:"), additional_kwargs={})])
 
 # Define state for application
 class State(TypedDict):
