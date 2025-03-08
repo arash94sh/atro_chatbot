@@ -21,7 +21,7 @@ from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_core.prompts import PromptTemplate, HumanMessagePromptTemplate
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_chroma import Chroma
-import osfrom langchain_core.tools import tool
+from langchain_core.tools import tool
 
 
 
