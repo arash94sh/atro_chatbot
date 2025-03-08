@@ -154,6 +154,7 @@ def generate(state: MessagesState):
         "don't know. Use three sentences maximum and keep the "
         "answer concise."
         "your users speak in farsi so you must answer them in farsi"
+        "you shouls not answer questions unrelated to the vectore database contnets"
         "\n\n"
         f"{docs_content}"
     )
