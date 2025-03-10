@@ -43,33 +43,78 @@ vector_store = Chroma(
 
 
 
-# #rpompt crafting
-prompt = ChatPromptTemplate(input_variables=['context', 'question'], input_types={}, partial_variables={}, metadata={'lc_hub_owner': 'rlm', 'lc_hub_repo': 'rag-prompt', 'lc_hub_commit_hash': '50442af133e61576e74536c6556cefe1fac147cad032f4377b60c436e6cdcb6e'}, messages=[HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['context', 'question'], input_types={}, partial_variables={}, template="you are an assistant that answers the users question regarding the services a company provide based on the content of this website, this is the persian website and the users are persians so you must speak in farsi.when there is no context find reqarding the question say that  you don't knowledge regarding the question.\nQuestion: {question} \nContext: {context} \nAnswer:"), additional_kwargs={})])
-
-# Define state for application
 class State(TypedDict):
-    question: str
-    context: List[Document]
-    answer: str
+  
+  messages: Annotated[list, add_messages]
 
+graph_builder = StateGraph(State)
 
-# Define application steps
 def retrieve(state: State):
-    retrieved_docs = vector_store.similarity_search(state["question"])
-    return {"context": retrieved_docs}
+    retrieved_docs = vector_store.similarity_search(state["messages"][0].content)
+    content = "\n\n".join([doc.page_content for doc in retrieved_docs]) 
+    return {"messages":[SystemMessage(content)]}
 
 
+
+
+
+
+
+
+
+
+
+# Step 3: Generate a response using the retrieved content.
 def generate(state: State):
-    docs_content = "\n\n".join(doc.page_content for doc in state["context"])
-    messages = prompt.invoke({"question": state["question"], "context": docs_content})
-    response = llm.invoke(messages)
-    return {"answer": response.content}
+    """Generate answer."""
+    # Get generated ToolMessages
+    docs_content = "" 
+    for message in state["messages"]:
+        if message.type == "system":
+            docs_content = message.content
 
 
-# Compile application and test
-graph_builder = StateGraph(State).add_sequence([retrieve, generate])
+
+    # Format into prompt
+
+    system_message_content = (
+        "You are an assistant for question-answering tasks. "
+        "Use the following pieces of retrieved context to answer "
+        "the question. If you don't know the answer, say that you "
+        "don't know. Use three sentences maximum and keep the "
+        "answer concise."
+        "you must answer in farsi"
+        "\n\n"
+        f"{docs_content}"
+    )
+    conversation_messages = [
+        message
+        for message in state["messages"]
+        if message.type == 'human'
+
+    ]
+    prompt = [SystemMessage(system_message_content)] + conversation_messages
+    # Run
+    response = llm.invoke(prompt)
+    return {"messages": [response]}
+
+
+
+
+
+graph_builder.add_node(retrieve)
+graph_builder.add_node(generate)
+
 graph_builder.add_edge(START, "retrieve")
+
+graph_builder.add_edge("retrieve", "generate")
+graph_builder.add_edge("generate", END)
+
 graph = graph_builder.compile()
+
+
+
+
 
 
 
@@ -93,13 +138,10 @@ if input_text := st.chat_input():
     st.chat_message("user").write(input_text)
 
 
-    msg = graph.invoke({"question": f"{input_text}"})['answer']
+    msg = graph.invoke({"messages":[HumanMessage(content=input_text)]})['messages'][-1].content
     st.session_state.messages.append({"role": "assistant", "content": msg})
     st.chat_message("assistant").write(msg)
 
 
 
 #____________________________________________________________
-
-
-
