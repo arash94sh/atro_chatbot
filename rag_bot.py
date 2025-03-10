@@ -22,10 +22,11 @@ from langchain_core.prompts import PromptTemplate, HumanMessagePromptTemplate
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_chroma import Chroma
 from langchain_core.tools import tool
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import SystemMessage, HumanMessage  
 from typing import Annotated
 from typing_extensions import TypedDict
 from langgraph.graph.message import add_messages
+import uuid
 
 
 
@@ -76,6 +77,9 @@ def generate(state: State):
     for message in state["messages"]:
         if message.type == "system":
             docs_content = message.content
+        if docs_content = "":
+            docs_content = " there is no content" 
+
 
 
 
@@ -88,7 +92,9 @@ def generate(state: State):
         "don't know. Use three sentences maximum and keep the "
         "answer concise."
         "you must answer in farsi"
+        "do not answer if there is no content "
         "\n\n"
+        "retrieved context:"
         f"{docs_content}"
     )
     conversation_messages = [
@@ -129,6 +135,9 @@ graph = graph_builder.compile()
 
 st.title("💬 Atro Agency Bot")
 
+if 'session_id' not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
+
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
@@ -141,8 +150,8 @@ if input_text := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": input_text})
     st.chat_message("user").write(input_text)
 
-
-    msg = graph.invoke({"messages":[HumanMessage(content=input_text)]})['messages'][-1].content
+    config = {"configurable": {"thread_id": st.session_state.session_id}}
+    msg = graph.invoke({"messages":[HumanMessage(content=input_text)]}, config)['messages'][-1].content
     st.session_state.messages.append({"role": "assistant", "content": msg})
     st.chat_message("assistant").write(msg)
 
