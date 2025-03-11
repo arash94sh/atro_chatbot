@@ -77,8 +77,8 @@ def generate(state: State):
     for message in state["messages"]:
         if message.type == "system":
             docs_content = message.content
-        if docs_content = "":
-            docs_content = " there is no content" 
+        if docs_content == "":
+            docs_content = " there is no content so just say you don't know" 
 
 
 
@@ -92,9 +92,8 @@ def generate(state: State):
         "don't know. Use three sentences maximum and keep the "
         "answer concise."
         "you must answer in farsi"
-        "do not answer if there is no content "
         "\n\n"
-        "retrieved context:"
+        "retrieved content:"
         f"{docs_content}"
     )
     conversation_messages = [
