@@ -119,7 +119,7 @@ graph_builder.add_edge(START, "retrieve")
 graph_builder.add_edge("retrieve", "generate")
 graph_builder.add_edge("generate", END)
 
-graph = graph_builder.compile()
+graph = graph_builder.compile(checkpointer=memory)
 
 
 
