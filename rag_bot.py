@@ -104,7 +104,7 @@ def generate(state: State):
     ]
     prompt = [SystemMessage(system_message_content)] + conversation_messages
     # Run
-    response = llm.invoke(prompt)
+    response = llm.with_retry().invoke(prompt)
     return {"messages": [response]}
 
 
