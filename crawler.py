@@ -13,6 +13,8 @@ from typing_extensions import List, TypedDict
 from langchain_mistralai import MistralAIEmbeddings
 from langchain_chroma import Chroma
 import os
+from langchain_mistralai import MistralAIEmbeddings
+
 
 if not os.environ.get("MISTRALAI_API_KEY"):
   os.environ["MISTRALAI_API_KEY"] = "ct0DL5yDroEhR0PicB3wCn60TVkjre8Z"
@@ -22,7 +24,6 @@ else:
 
 os.environ['HF_TOKEN'] = "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"
 
-from langchain_mistralai import MistralAIEmbeddings
 
 embeddings = MistralAIEmbeddings(model="mistral-embed", api_key="ct0DL5yDroEhR0PicB3wCn60TVkjre8Z")
 
@@ -33,7 +34,7 @@ vector_store = Chroma(
     persist_directory="./chroma_langchain_db",  # Where to save data locally, remove if not necessary
 )
 loader = WebBaseLoader(
-    web_paths=("https://atro.agency/","https://atro.agency/services/webdesign/", "https://atro.agency/services/seo/", "https://atro.agency/services/gads/", "https://atro.agency/services/socialmedia/", "https://atro.agency/services/branding/"),
+    web_paths=("https://atro.agency/","https://atro.agency/services/webdesign/", "https://atro.agency/services/seo/", "https://atro.agency/services/gads/", "https://atro.agency/services/socialmedia/", "https://atro.agency/services/branding/", "https://atro.agency/projects/", "https://atro.agency/about/", "https://atro.agency/services/"),
     bs_kwargs=dict(
         parse_only=bs4.SoupStrainer(
             class_=("page-content")
