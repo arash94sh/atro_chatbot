@@ -140,7 +140,7 @@ if 'session_id' not in st.session_state:
 
 
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "سلام٬به پشتیبانوبایت آترو خوش آمدید. لطفا سوال خود را بپرسید"}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "سلام٬به پشتیبان وبسایت آترو خوش آمدید. لطفا سوال خود را بپرسید"}]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
