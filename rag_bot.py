@@ -28,6 +28,7 @@ from typing_extensions import TypedDict
 from langgraph.graph.message import add_messages
 import uuid
 from langgraph.checkpoint.memory import MemorySaver
+from langchain_openai import ChatOpenAI
 
 
 
@@ -38,7 +39,7 @@ if not os.environ.get("MISTRAL_API_KEY"):
 else:
     print (os.environ.get("MISTRAL_API_KEY"))
 embeddings = MistralAIEmbeddings(model="mistral-embed", api_key="9rgqfj9t0iqLe59uG7Q881iNXU6G0U5W")
-llm = init_chat_model("mistral-large-latest", model_provider="mistralai")
+#llm = init_chat_model("mistral-large-latest", model_provider="mistralai")
 
 
 vector_store = Chroma(
@@ -46,7 +47,16 @@ vector_store = Chroma(
     embedding_function=embeddings,
     persist_directory="./chroma_langchain_db",)  # Where to save data locally, remove if not necessary
 
-
+llm = ChatOpenAI(
+    model="openai/gpt-4o-mini",
+    max_retries=2,
+    api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2N2ZlMGJkNmIwMmU2Y2Q5YzY3NTJlMzQiLCJ0eXBlIjoiYXV0aCIsImlhdCI6MTc1MTI3MTgwNn0.Aw2FYlyAdqvhb5qOAj4K3xG1RAyaO1GgIhJFsewM1p4",
+    base_url="https://ai.liara.ir/api/v1/6860e58052ae45201e7cdd38",
+    timeout = 20.0,
+    temperature=0,
+    # organization="...",
+    # other params...
+)
 
 
 class State(TypedDict):
